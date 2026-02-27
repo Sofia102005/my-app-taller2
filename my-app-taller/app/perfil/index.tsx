@@ -3,54 +3,62 @@ import React, { useState } from 'react';
 import { Alert, Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 
 type TItemNota = {
-    texto: String,
-    valor: String
-}
+    texto: string,
+    valor: string
+};
 
-const ItemNota = (props: TItemNota) => {
+const ItemNota = ({ texto, valor }: TItemNota) => {
     return (
         <View style={estilos.itemNota}>
-            <Text style={{ fontWeight: 'bold' }}>{props.texto} {props.valor}</Text>
+            <Text style={{ fontWeight: 'bold' }}>
+                {texto} {valor}
+            </Text>
         </View>
     );
-}
+};
 
 const PerfilScreen = () => {
-    const [nota, setNota] = useState<String>(''); 
-    const [listaNotas, setListaNotas] = useState<String[]>([]);
-    const [promedio, setPromedio] = useState<Number>(0);
+    const [nota, setNota] = useState<string>(''); 
+    const [listaNotas, setListaNotas] = useState<string[]>([]);
+    const [promedio, setPromedio] = useState<number>(0);
     const router = useRouter();
 
-    const agregarNota = () => {
-        const valorNum = parseFloat(nota.toString());
+    // No permite más de 2 decimales mientras escribe
+    const handleChangeNota = (valor: string) => {
+        const regex = /^\d*(\.\d{0,2})?$/;
+        if (regex.test(valor)) {
+            setNota(valor);
+        }
+    };
 
-        // Verificamos que sea un número y que el campo no esté vacío
+    const agregarNota = () => {
+        const valorNum = parseFloat(nota);
+
+        // Validar campo vacío o no numérico
         if (isNaN(valorNum) || nota.trim() === "") {
             Alert.alert("Error", "Ingrese un número válido");
             return;
         }
         
-        // El rango permitido es de 0 a 5 según requerimientos
+        // Validar rango 0 a 5
         if (valorNum < 0 || valorNum > 5) {
             Alert.alert("Error", "La nota debe estar entre 0 y 5");
             return;
         }
 
-        // Formateamos a 2 decimales y actualizamos el estado de la lista
-        const nuevaNotaStr = valorNum.toFixed(2);
-        const nuevaLista = [...listaNotas, nuevaNotaStr];
+        const nuevaLista = [...listaNotas, nota];
         setListaNotas(nuevaLista);
 
-        // Calculamos el promedio basándonos en la lista recién actualizada
+        // Calcular promedio
         let suma = 0;
-        nuevaLista.forEach((n: String) => {
-            suma += parseFloat(n.toString());
+        nuevaLista.forEach((n) => {
+            suma += parseFloat(n);
         });
-        
+
         const nuevoPromedio = suma / nuevaLista.length;
         setPromedio(nuevoPromedio);
 
-        setNota(''); 
+        setNota('');
     };
 
     const borrarTodo = () => {
@@ -67,8 +75,8 @@ const PerfilScreen = () => {
                 style={estilos.input}
                 placeholder="Nota (0.00 - 5.00)"
                 keyboardType="numeric"
-                value={nota.toString()}
-                onChangeText={(v: String) => setNota(v)}
+                value={nota}
+                onChangeText={handleChangeNota}
             />
 
             <Button title="Agregar Nota" onPress={agregarNota} color="#b32c2c" />
@@ -90,11 +98,11 @@ const PerfilScreen = () => {
                 <View style={{ marginBottom: 10 }}>
                     <Button title="Borrar Todo" onPress={borrarTodo} color="#f027b3" />
                 </View>
-                <Button title="Salir" onPress={() => router.replace('/')} color="black" />
+                <Button title="Salir" onPress={() => router.replace('/login')} color="black" />
             </View>
         </View>
     );
-}
+};
 
 const estilos = StyleSheet.create({
     Container: {   
