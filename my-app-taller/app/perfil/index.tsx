@@ -1,55 +1,46 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Button, FlatList, StyleSheet, Text, TextInput, View, Keyboard } from 'react-native';
 
 type TItemNota = {
-    texto: String,
-    valor: String
+    texto: string,
+    valor: string
 }
 
 const ItemNota = (props: TItemNota) => {
     return (
         <View style={estilos.itemNota}>
-            <Text style={{ fontWeight: 'bold' }}>{props.texto} {props.valor}</Text>
+            <Text style={{ fontWeight: 'bold', color: '#5d4037' }}>{props.texto} {props.valor}</Text>
         </View>
     );
 }
 
 const PerfilScreen = () => {
-    const [nota, setNota] = useState<String>(''); 
-    const [listaNotas, setListaNotas] = useState<String[]>([]);
-    const [promedio, setPromedio] = useState<Number>(0);
+    const [nota, setNota] = useState<string>(''); 
+    const [listaNotas, setListaNotas] = useState<string[]>([]);
+    const [promedio, setPromedio] = useState<number>(0);
     const router = useRouter();
 
     const agregarNota = () => {
-        const valorNum = parseFloat(nota.toString());
+        Keyboard.dismiss(); // Ayuda a que el Alert sea visible de inmediato
+        const valorNum = parseFloat(nota);
 
-        // Verificamos que sea un número y que el campo no esté vacío
         if (isNaN(valorNum) || nota.trim() === "") {
             Alert.alert("Error", "Ingrese un número válido");
             return;
         }
         
-        // El rango permitido es de 0 a 5 según requerimientos
         if (valorNum < 0 || valorNum > 5) {
             Alert.alert("Error", "La nota debe estar entre 0 y 5");
             return;
         }
 
-        // Formateamos a 2 decimales y actualizamos el estado de la lista
         const nuevaNotaStr = valorNum.toFixed(2);
         const nuevaLista = [...listaNotas, nuevaNotaStr];
         setListaNotas(nuevaLista);
 
-        // Calculamos el promedio basándonos en la lista recién actualizada
-        let suma = 0;
-        nuevaLista.forEach((n: String) => {
-            suma += parseFloat(n.toString());
-        });
-        
-        const nuevoPromedio = suma / nuevaLista.length;
-        setPromedio(nuevoPromedio);
-
+        const suma = nuevaLista.reduce((acc, n) => acc + parseFloat(n), 0);
+        setPromedio(suma / nuevaLista.length);
         setNota(''); 
     };
 
@@ -67,11 +58,14 @@ const PerfilScreen = () => {
                 style={estilos.input}
                 placeholder="Nota (0.00 - 5.00)"
                 keyboardType="numeric"
-                value={nota.toString()}
-                onChangeText={(v: String) => setNota(v)}
+                value={nota}
+                onChangeText={setNota}
             />
 
-            <Button title="Agregar Nota" onPress={agregarNota} color="#b32c2c" />
+            {/* Botón con color fuerte (Rojo Intenso) */}
+            <View style={estilos.buttonContainer}>
+                <Button title="Agregar Nota" onPress={agregarNota} color="#D81B60" />
+            </View>
 
             <Text style={estilos.promedioTexto}>
                 Promedio Actual: {promedio.toFixed(2)}
@@ -87,10 +81,12 @@ const PerfilScreen = () => {
             />
 
             <View style={estilos.footer}>
-                <View style={{ marginBottom: 10 }}>
-                    <Button title="Borrar Todo" onPress={borrarTodo} color="#f027b3" />
+                <View style={{ marginBottom: 12 }}>
+                    {/* Botón con color fuerte (Violeta/Fucsia) */}
+                    <Button title="Borrar Todo" onPress={borrarTodo} color="#8E24AA" />
                 </View>
-                <Button title="Salir" onPress={() => router.replace('/')} color="black" />
+                {/* Botón con color fuerte (Negro o Azul muy oscuro) */}
+                <Button title="Salir" onPress={() => router.replace('/login')} color="#212121" />
             </View>
         </View>
     );
@@ -101,47 +97,54 @@ const estilos = StyleSheet.create({
         flex: 1,
         padding: 20, 
         alignItems: 'center',
-        backgroundColor: '#c0a010',
+        backgroundColor: '#FCE4EC', // Rosa pálido de fondo
     },
     titulo: {
-        fontSize: 22,
-        color: 'white',
+        fontSize: 24,
+        color: '#880E4F', // Rosa muy oscuro para contraste
         fontWeight: 'bold',
-        marginTop: 40,
-        marginBottom: 10
+        marginTop: 50,
+        marginBottom: 20
     },
     input: {
         backgroundColor: 'white',
-        borderWidth: 1,
-        borderColor: '#b32c2c',
-        borderRadius: 14,
+        borderWidth: 1.5,
+        borderColor: '#F06292',
+        borderRadius: 12,
         padding: 10,
-        height: 50,
+        height: 55,
         width: '100%',
-        marginBottom: 15,
+        marginBottom: 20,
         textAlign: 'center',
-        fontSize: 18
+        fontSize: 18,
+        color: '#880E4F'
+    },
+    buttonContainer: {
+        width: '100%',
+        borderRadius: 10,
+        overflow: 'hidden', // Necesario para bordes redondeados en Android con Button
+        marginBottom: 10
     },
     promedioTexto: {
-        color: 'white',
-        fontSize: 20,
-        marginVertical: 15,
+        color: '#AD1457',
+        fontSize: 22,
+        marginVertical: 20,
         fontWeight: 'bold',
-        textDecorationLine: 'underline'
     },
     itemNota: {
-        backgroundColor: '#f8f8f8',
-        padding: 12,
-        marginVertical: 4,
-        borderRadius: 8,
-        borderLeftWidth: 4,
-        borderLeftColor: '#b32c2c',
-        width: '100%'
+        backgroundColor: '#FFF1F3',
+        padding: 15,
+        marginVertical: 6,
+        borderRadius: 10,
+        borderLeftWidth: 5,
+        borderLeftColor: '#F06292',
+        width: '100%',
+        elevation: 2, // Sombra ligera en Android
     },
     footer: {
         width: '100%',
-        marginTop: 10,
-        paddingBottom: 20
+        marginTop: 15,
+        paddingBottom: 30
     }
 });
 
