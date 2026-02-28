@@ -5,22 +5,14 @@ import { Alert, Button, FlatList, StyleSheet, Text, TextInput, View, Keyboard } 
 type TItemNota = {
     texto: string,
     valor: string
-<<<<<<< HEAD
-}
-=======
 };
->>>>>>> 3d1ec66055014a11b9cb1c2ee3e6ccf4f9823b73
 
 const ItemNota = ({ texto, valor }: TItemNota) => {
     return (
         <View style={estilos.itemNota}>
-<<<<<<< HEAD
-            <Text style={{ fontWeight: 'bold', color: '#5d4037' }}>{props.texto} {props.valor}</Text>
-=======
             <Text style={{ fontWeight: 'bold' }}>
                 {texto} {valor}
             </Text>
->>>>>>> 3d1ec66055014a11b9cb1c2ee3e6ccf4f9823b73
         </View>
     );
 };
@@ -31,12 +23,6 @@ const PerfilScreen = () => {
     const [promedio, setPromedio] = useState<number>(0);
     const router = useRouter();
 
-<<<<<<< HEAD
-    const agregarNota = () => {
-        Keyboard.dismiss(); // Ayuda a que el Alert sea visible de inmediato
-        const valorNum = parseFloat(nota);
-
-=======
     // No permite más de 2 decimales mientras escribe
     const handleChangeNota = (valor: string) => {
         const regex = /^\d*(\.\d{0,2})?$/;
@@ -49,30 +35,16 @@ const PerfilScreen = () => {
         const valorNum = parseFloat(nota);
 
         // Validar campo vacío o no numérico
->>>>>>> 3d1ec66055014a11b9cb1c2ee3e6ccf4f9823b73
         if (isNaN(valorNum) || nota.trim() === "") {
             Alert.alert("Error", "Ingrese un número válido");
             return;
         }
         
-<<<<<<< HEAD
-=======
-        // Validar rango 0 a 5
->>>>>>> 3d1ec66055014a11b9cb1c2ee3e6ccf4f9823b73
         if (valorNum < 0 || valorNum > 5) {
             Alert.alert("Error", "La nota debe estar entre 0 y 5");
             return;
         }
 
-<<<<<<< HEAD
-        const nuevaNotaStr = valorNum.toFixed(2);
-        const nuevaLista = [...listaNotas, nuevaNotaStr];
-        setListaNotas(nuevaLista);
-
-        const suma = nuevaLista.reduce((acc, n) => acc + parseFloat(n), 0);
-        setPromedio(suma / nuevaLista.length);
-        setNota(''); 
-=======
         const nuevaLista = [...listaNotas, nota];
         setListaNotas(nuevaLista);
 
@@ -86,7 +58,6 @@ const PerfilScreen = () => {
         setPromedio(nuevoPromedio);
 
         setNota('');
->>>>>>> 3d1ec66055014a11b9cb1c2ee3e6ccf4f9823b73
     };
 
     const borrarTodo = () => {
@@ -104,11 +75,7 @@ const PerfilScreen = () => {
                 placeholder="Nota (0.00 - 5.00)"
                 keyboardType="numeric"
                 value={nota}
-<<<<<<< HEAD
-                onChangeText={setNota}
-=======
                 onChangeText={handleChangeNota}
->>>>>>> 3d1ec66055014a11b9cb1c2ee3e6ccf4f9823b73
             />
 
             {/* Botón con color fuerte (Rojo Intenso) */}
@@ -131,15 +98,12 @@ const PerfilScreen = () => {
 
             <View style={estilos.footer}>
                 <View style={{ marginBottom: 12 }}>
-                    {/* Botón con color fuerte (Violeta/Fucsia) */}
+                    
                     <Button title="Borrar Todo" onPress={borrarTodo} color="#8E24AA" />
                 </View>
-<<<<<<< HEAD
-                {/* Botón con color fuerte (Negro o Azul muy oscuro) */}
+
                 <Button title="Salir" onPress={() => router.replace('/login')} color="#212121" />
-=======
-                <Button title="Salir" onPress={() => router.replace('/login')} color="black" />
->>>>>>> 3d1ec66055014a11b9cb1c2ee3e6ccf4f9823b73
+
             </View>
         </View>
     );
@@ -150,11 +114,11 @@ const estilos = StyleSheet.create({
         flex: 1,
         padding: 20, 
         alignItems: 'center',
-        backgroundColor: '#FCE4EC', // Rosa pálido de fondo
+        backgroundColor: '#FCE4EC', 
     },
     titulo: {
         fontSize: 24,
-        color: '#880E4F', // Rosa muy oscuro para contraste
+        color: '#880E4F',
         fontWeight: 'bold',
         marginTop: 50,
         marginBottom: 20
@@ -175,7 +139,7 @@ const estilos = StyleSheet.create({
     buttonContainer: {
         width: '100%',
         borderRadius: 10,
-        overflow: 'hidden', // Necesario para bordes redondeados en Android con Button
+        overflow: 'hidden', 
         marginBottom: 10
     },
     promedioTexto: {
